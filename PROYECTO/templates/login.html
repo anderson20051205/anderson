@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #4a90e2;
+      background-color: #fff;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #4a90e2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-submit:hover {
+      background-color: #357ab8;
+    }
+
+    .register-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #4a90e2;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .register-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Iniciar sesión</h2>
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label for="correo">Correo:</label>
+        <input type="email" name="correo" id="correo" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required>
+      </div>
+      <button type="submit" class="btn-submit">Ingresar</button>
+    </form>
+    <a href="/crear" class="register-link">Crear cuenta nueva</a>
+  </div>
+</body>
+</html>

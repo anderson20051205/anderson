@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Pólizas</title>
+  <style>
+    /* (Tu CSS igual, lo dejo sin cambios para no alargar) */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f6fa;
+    }
+
+    tr:hover {
+      background-color: #e0f0ff;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-renovar {
+      background-color: #27ae60;
+      color: #fff;
+    }
+
+    .btn-renovar:hover {
+      background-color: #1e874b;
+    }
+
+    .btn-cancelar {
+      background-color: #e74c3c;
+      color: #fff;
+    }
+
+    .btn-cancelar:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-pdf {
+      margin-top: 15px;
+      background-color: #4a90e2;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-pdf:hover {
+      background-color: #357ab8;
+    }
+
+    .btn-logout {
+      margin-top: 20px;
+      background-color: #e74c3c;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-logout:hover {
+      background-color: #c0392b;
+    }
+
+    .form-poliza {
+      margin-top: 30px;
+      background-color: #f9fafc;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-poliza input, .form-poliza select {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-poliza button {
+      background-color: #27ae60;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .form-poliza button:hover {
+      background-color: #1e874b;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+  </style>
+  <script>
+    function renovarPoliza(fechaFinalizacion) {
+      const fechaActual = new Date();
+      const fechaFin = new Date(fechaFinalizacion);
+      if (fechaActual < fechaFin) {
+        alert("No se puede renovar aún. La póliza sigue vigente.");
+      } else {
+        alert("Póliza renovada correctamente."); 
+      }
+    }
+
+    function cancelarPoliza(fechaFinalizacion) {
+      const fechaActual = new Date();
+      const fechaFin = new Date(fechaFinalizacion);
+      if (fechaActual < fechaFin) {
+        alert("No se puede cancelar aún. La póliza sigue vigente.");
+      } else {
+        alert("Póliza cancelada correctamente.");
+      }
+    }
+
+    function imprimirPDF() {
+      window.open("/imprimir-pdf", "_blank");
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Bienvenido, {{.Usuario.Nombre}}</h2>
+    <h3>Tus Pólizas</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Emisión</th>
+          <th>Finalización</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Polizas}}
+        <tr>
+          <td>{{.Tipo}}</td>
+          <td>{{.Estado}}</td>
+          <td>{{.FechaEmision.Format "02-01-2006"}}</td>
+          <td>{{.FechaFinalizacion.Format "02-01-2006"}}</td>
+          <td>
+            <form method="POST" action="/renovar-poliza" style="display:inline;">
+              <input type="hidden" name="id" value="{{.ID}}">
+              <button class="btn btn-renovar" type="submit">Renovar</button>
+            </form>
+            <form method="POST" action="/cancelar-poliza" style="display:inline;">
+              <input type="hidden" name="id" value="{{.ID}}">
+              <button class="btn btn-cancelar" type="submit">Cancelar</button>
+            </form>
+          </td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+
+    <div class="form-poliza">
+      <h3>Agregar Nueva Póliza</h3>
+      <form action="/agregar-poliza" method="POST">
+        <!-- Agregado campo oculto para enviar usuario_id -->
+        <input type="hidden" name="usuario_id" value="{{.Usuario.ID}}">
+
+        <label for="tipo">Tipo de Póliza</label>
+        <input type="text" name="tipo" id="tipo" required>
+
+        <label for="estado">Estado</label>
+        <select name="estado" id="estado" required>
+          <option value="activa">Activa</option>
+          <option value="vencida">Vencida</option>
+        </select>
+
+        <!-- Cambié nombre de inputs para que coincidan con lo que espera el backend -->
+        <label for="fecha_emision">Fecha de Inicio</label>
+        <input type="date" name="fecha_emision" id="fecha_emision" required>
+
+        <label for="fecha_finalizacion">Fecha de Finalización</label>
+        <input type="date" name="fecha_finalizacion" id="fecha_finalizacion" required>
+
+        <button type="submit">Agregar Póliza</button>
+      </form>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="btn-pdf" onclick="imprimirPDF()">Imprimir en PDF</button>
+      <a href="/logout" class="btn-logout">Cerrar sesión</a>
+    </div>
+  </div>
+</body>
+</html>
+
+
